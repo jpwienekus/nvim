@@ -1,4 +1,4 @@
-return { "github/copilot.vim" }
+ return { "github/copilot.vim" }
 -- return { 
 --   "zbirenbaum/copilot.lua", 
 --   config = function()

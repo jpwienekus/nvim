@@ -3,6 +3,7 @@ function LineNumberColors()
     vim.api.nvim_set_hl(0, 'LineNrAbove', { fg='#FFFFFF', bold=true })
     vim.api.nvim_set_hl(0, 'LineNr', { fg='#FFFFFF', bold=true })
     vim.api.nvim_set_hl(0, 'LineNrBelow', { fg='#FFFFFF', bold=true })
+    -- vim.api.nvim_set_hl(0, 'CursorLine', { bg='transparent' })
 end
 
 return {
@@ -10,7 +11,7 @@ return {
     lazy = false,
     priority = 1000,
     opts = {
-      -- dark_style_background = 'transparent'
+      dark_style_background = 'transparent'
     },
     config = function(_, opts)
       -- vim.cmd.colorscheme 'monokai-nightasty'

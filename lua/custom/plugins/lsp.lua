@@ -6,8 +6,21 @@ return {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
 
     { 'j-hui/fidget.nvim', opts = {} },
+    {
+      "folke/lazydev.nvim",
+      ft = "lua", -- only load on lua files
+      opts = {
+        library = {
+          -- See the configuration section for more details
+          -- Load luvit types when the `vim.uv` word is found
+          { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        },
+      },
+    },
   },
   config = function()
+    -- vim.lsp.set_log_level("debug")
+
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
       callback = function(event)
@@ -16,24 +29,19 @@ return {
         end
 
         map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-
         map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-
         map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-
         map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-
         map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-
         map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-
         map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-
         map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-
         map('K', vim.lsp.buf.hover, 'Hover Documentation')
-
         map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+        map("D", vim.diagnostic.open_float, 'Hover Diagnostics')
+        --map("[d", vim.diagnostic.goto_next, 'Next [D]iagnostic')
+        --map("]d", vim.diagnostic.goto_prev, 'Previous [D]iagnostic')
+
 
         local client = vim.lsp.get_client_by_id(event.data.client_id)
         if client and client.server_capabilities.documentHighlightProvider then
@@ -56,21 +64,36 @@ return {
     local servers = {
       tsserver = {},
       svelte = {},
-      pyright = {},
-      lua_ls = {
+      pyright = {
         settings = {
-          Lua = {
-            runtime = { version = 'LuaJIT' },
-            workspace = {
-              checkThirdParty = false,
-              library = {
-                '${3rd}/luv/library',
-                unpack(vim.api.nvim_get_runtime_file('', true)),
-              },
-            },
-          },
-        },
+          python = {
+            analysis = {
+              diagnosticSeverityOverrides = {
+                reportGeneralTypeIssues = "warning",
+                reportOptionalMemberAccess = "warning",
+                reportOptionalSubscript = "warning",
+                reportPrivateImportUsage = "warning",
+              }
+            }
+          }
+        }
       },
+      --solargraph = {},
+      --lua_ls = {
+      --  settings = {
+      --    Lua = {
+      --      runtime = { version = 'LuaJIT' },
+      --      workspace = {
+      --        checkThirdParty = false,
+      --        library = {
+      --          '${3rd}/luv/library',
+      --          unpack(vim.api.nvim_get_runtime_file('', true)),
+      --        },
+      --      },
+      --    },
+      --  },
+      --},
+      --gopls= {},
     }
 
     require('mason').setup()
